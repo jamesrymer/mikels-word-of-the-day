@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mikels Forty Word Of The Day — With Quote</title>
+  <style>
+    :root{
+      --bg1:#0c1224; --bg2:#0a0f1b; --panel:#0f1630; --panel2:#131c3a;
+      --text:#f6f9ff; --muted:#c0cae5; --hair:#2a3357;
+      --accent1:#7b2cff; --accent2:#16e0f5; --accent3:#ff9d00; --accent4:#2ee65e; --accent5:#2a78ff;
+      --focus:#fff; --radius:20px; --shadow:0 10px 30px rgba(0,0,0,.35); --base:18px; --ring:0 0 0 3px rgba(255,255,255,.5), 0 0 0 6px rgba(22,224,245,.35);
+    }
+    html,body{height:100%}
+    *{box-sizing:border-box}
+    body{margin:0; color:var(--text); font: var(--base)/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans"; letter-spacing:.2px; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; background:
+      radial-gradient(900px 500px at 20% 10%, rgba(123,44,255,.18), transparent 60%),
+      radial-gradient(900px 500px at 80% 0%, rgba(46,230,94,.10), transparent 60%),
+      linear-gradient(160deg, var(--bg1), var(--bg2));
+    }
+    body:not(.simple){ animation:bgshift 60s linear infinite }
+    @keyframes bgshift{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
+
+    .wrap{position:relative; z-index:1; max-width:min(1100px, 92vw); margin:0 auto; padding:clamp(16px,3vw,28px)}
+
+    /* NEW: Quote banner */
+    .quote{display:flex; align-items:center; gap:12px; padding:12px 16px; margin:8px 0 14px; border-radius:16px; background:linear-gradient(180deg, var(--panel), var(--panel2)); outline:1px solid var(--hair); box-shadow:var(--shadow)}
+    .quote .bar{width:6px; align-self:stretch; border-radius:8px; background:linear-gradient(180deg, var(--accent3), var(--accent2))}
+    .quote .text{font-weight:900; letter-spacing:.6px; text-transform:uppercase; font-size:clamp(14px,2.6vw,18px)}
+    body.simple .quote{box-shadow:none}
+
+    .title{display:flex; align-items:end; justify-content:space-between; gap:16px; margin:6px 0 16px}
+    .title h1{margin:0; line-height:1.05; letter-spacing:.4px; font-size:clamp(28px,5.6vw,56px); font-weight:900; background:linear-gradient(180deg,#fff,#dbe8ff); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 2px 0 rgba(10,0,48,.6)}
+    body.simple .title h1{ color:var(--text); background:none; text-shadow:none }
+    .badge{font-size:clamp(12px,2.2vw,16px); padding:8px 12px; border-radius:999px; font-weight:800; color:#0b0620; background:linear-gradient(135deg,#ffe082,#ff9d00); box-shadow:var(--shadow); transform:skewX(-8deg)}
+
+    .card{position:relative; border-radius:var(--radius); padding:18px; margin:8px 0 18px; overflow:hidden; background:linear-gradient(180deg, var(--panel), var(--panel2)); box-shadow:var(--shadow)}
+    .card::before{content:""; position:absolute; inset:0; pointer-events:none; border-radius:calc(var(--radius) + 2px); background:linear-gradient(135deg, rgba(123,44,255,.45), rgba(22,224,245,.35)); -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; padding:2px}
+
+    .content{position:relative; z-index:1; display:grid; gap:18px; grid-template-columns: 1.1fr .9fr; align-items:start}
+    @media (max-width:900px){ .content{grid-template-columns:1fr} }
+
+    .word-block{border-radius:16px; padding:18px; background:rgba(255,255,255,.02); outline:1px solid var(--hair)}
+    .word{font-size: clamp(42px, 8.5vw, 84px); line-height:1.05; margin:8px 0 6px; font-weight:900; letter-spacing:.5px; color:var(--text); overflow-wrap:anywhere; hyphens:auto}
+    body:not(.simple) .word{ background:linear-gradient(135deg,#fff,#d9f6ff 60%,#ece9ff); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow:0 3px 0 rgba(10,0,48,.55) }
+
+    .rarity{display:inline-flex; align-items:center; gap:8px; font-size:14px; letter-spacing:.6px; padding:7px 10px; border-radius:999px; font-weight:900; text-transform:uppercase; color:#0a0030; background:var(--rbg,linear-gradient(135deg,var(--accent5),#4db8ff)); box-shadow:0 8px 20px rgba(0,0,0,.25)}
+    .rarity .dot{width:8px;height:8px;border-radius:50%;background:#0a0030}
+
+    .defs{display:grid; gap:12px; font-weight:700; font-size: clamp(16px, 2.5vw, 18px)}
+    .defs div{display:grid; grid-template-columns: 160px 1fr; gap:12px; align-items:start}
+    @media (max-width:560px){ .defs div{grid-template-columns: 1fr} }
+    .label{color:var(--muted); text-transform:uppercase; font-size:.8rem; letter-spacing:1px}
+    .value{color:var(--text)}
+    .example{font-weight:600; opacity:.95}
+
+    .panel{border-radius:16px; padding:16px; background:rgba(255,255,255,.02); outline:1px solid var(--hair)}
+
+    .controls{display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+    .btn{--c1:var(--accent1); --c2:var(--accent2); border:none; cursor:pointer; font-weight:900; letter-spacing:.6px; text-transform:uppercase; padding:12px 16px; border-radius:12px; position:relative; background:linear-gradient(135deg, var(--c1), var(--c2)); color:#0b0620; box-shadow:var(--shadow); clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); transition: transform .05s ease, filter .2s ease}
+    .btn:hover{filter:brightness(1.06)}
+    .btn:active{transform:translateY(1px)}
+    .btn:focus-visible{outline:none; box-shadow:var(--ring)}
+    .btn--gold{ --c1:#ffe082; --c2:#ff9d00 }
+    .btn--teal{ --c1:#24ffc8; --c2:#16e0f5 }
+    .btn--gray{ --c1:#dfe7ff; --c2:#b7c4ff }
+
+    .options{display:flex; gap:10px; align-items:center; margin-top:8px; color:var(--muted); font-size:.95rem}
+    .toggle{appearance:none; width:46px; height:28px; border-radius:999px; position:relative; background:#3a4573; outline:1px solid var(--hair); cursor:pointer}
+    .toggle::after{content:""; position:absolute; width:22px; height:22px; top:3px; left:3px; border-radius:50%; background:#fff; transition:left .18s ease}
+    .toggle:checked{background:#9be7ff}
+    .toggle:checked::after{left:21px}
+
+    .sub{font-size:.95rem; color:var(--muted)}
+    .footer{margin-top:12px; text-align:center; font-size:.85rem; color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="quote" role="note" aria-label="featured quote">
+      <div class="bar" aria-hidden="true"></div>
+      <div class="text">"DAAANNGG THAT SUCKS FOR YOU BUT THATS GREAT NEWS FOR ME"</div>
+    </div>
+
+    <header class="title">
+      <h1>Mikels Forty Word Of The Day</h1>
+      <div class="badge" aria-hidden="true">Victory Lexicon</div>
+    </header>
+
+    <main class="card" aria-live="polite">
+      <div class="content">
+        <section class="word-block">
+          <div class="rarity" id="rarity"><span class="dot"></span><span id="rarityText">Epic</span></div>
+          <div class="word" id="word">Loading…</div>
+          <div class="defs">
+            <div><span class="label">Pronunciation</span><span class="value" id="pron">—</span></div>
+            <div><span class="label">Part of speech</span><span class="value" id="pos">—</span></div>
+            <div><span class="label">Definition</span><span class="value" id="def">—</span></div>
+            <div><span class="label">Example</span><span class="value example" id="ex">—</span></div>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <div class="controls" style="margin-bottom:10px">
+            <button class="btn" id="btnShuffle" title="Shuffle a new word"><span>Shuffle</span></button>
+            <button class="btn btn--teal" id="btnToday" title="Jump back to today's word"><span>Today's Roll</span></button>
+            <button class="btn btn--gold" id="btnSpeak" title="Hear pronunciation"><span>Pronounce 🔊</span></button>
+            <button class="btn btn--gray" id="btnCopy" title="Copy the card"><span>Copy</span></button>
+          </div>
+          <div class="options">
+            <label for="simpleToggle">Simple Mode</label>
+            <input id="simpleToggle" class="toggle" type="checkbox" aria-label="Toggle Simple Mode"/>
+            <span class="sub" id="subline">Tip: Press <strong>R</strong> to shuffle, <strong>T</strong> for today, <strong>P</strong> to pronounce, <strong>S</strong> for Simple Mode.</span>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <p class="footer">With Quote • Added your line as a top banner. Toggle Simple Mode for a no-frills look.</p>
+  </div>
+
+  <script>
+    const WORDS = [
+      {w:"sesquipedalian", p:"ses-kwi-puh-DAY-lee-uhn", pos:"adjective", d:"Characterized by long words; long-winded.", e:"His sesquipedalian monologue impressed and exhausted the squad."},
+      {w:"perspicacious", p:"pur-spi-KAY-shus", pos:"adjective", d:"Having keen understanding and insight.", e:"Her perspicacious callouts turned close games into wins."},
+      {w:"ineffable", p:"in-EH-fuh-bul", pos:"adjective", d:"Too great or extreme to be expressed in words.", e:"The sunset over the coast was ineffable."},
+      {w:"ineluctable", p:"in-uh-LUK-tuh-bul", pos:"adjective", d:"Unable to be resisted or avoided; inescapable.", e:"The storm's advance felt ineluctable."},
+      {w:"anfractuous", p:"an-FRAK-choo-us", pos:"adjective", d:"Full of twists and turns; tortuous.", e:"We followed the anfractuous trail to the point."},
+      {w:"recondite", p:"REK-uhn-dyte", pos:"adjective", d:"Little known; abstruse.", e:"He dropped recondite facts like loot from a chest."},
+      {w:"apotheosis", p:"uh-poth-ee-OH-sis", pos:"noun", d:"The highest point of development; culmination.", e:"That clutch moment was the apotheosis of her season."},
+      {w:"intransigent", p:"in-TRAN-zih-jent", pos:"adjective", d:"Unwilling to compromise or change one's views.", e:"He stayed intransigent about his drop spot."},
+      {w:"insouciant", p:"in-SOO-see-uhnt", pos:"adjective", d:"Casually unconcerned; nonchalant.", e:"Her insouciant style hid serious skill."},
+      {w:"lugubrious", p:"loo-GOO-bree-us", pos:"adjective", d:"Looking or sounding sad and dismal.", e:"After the loss, his lugubrious sigh echoed in comms."},
+      {w:"ubiquitous", p:"yoo-BIK-wi-tus", pos:"adjective", d:"Present, appearing, or found everywhere.", e:"The ubiquitous seagulls patrolled the lineup."},
+      {w:"surreptitious", p:"sur-uhp-TISH-us", pos:"adjective", d:"Kept secret, especially because it would not be approved.", e:"They made a surreptitious plan to rotate early."},
+      {w:"pulchritudinous", p:"puhl-kri-TOO-di-nus", pos:"adjective", d:"Physically beautiful.", e:"A pulchritudinous reef wave reeled down the point."},
+      {w:"magnanimous", p:"mag-NAN-uh-mus", pos:"adjective", d:"Generous or forgiving, especially toward a rival.", e:"He was magnanimous in victory and in defeat."},
+      {w:"assiduous", p:"uh-SIJ-oo-us", pos:"adjective", d:"Showing great care and perseverance.", e:"Her assiduous practice paid off on finals day."},
+      {w:"temerity", p:"tuh-MER-ih-tee", pos:"noun", d:"Excessive confidence or boldness; audacity.", e:"He had the temerity to paddle for the bomb set."},
+      {w:"truculent", p:"TRUHK-yuh-lent", pos:"adjective", d:"Eager or quick to argue or fight; aggressively defiant.", e:"A truculent current battled every paddle stroke."},
+      {w:"profligate", p:"PRAH-fli-git", pos:"adjective", d:"Recklessly extravagant or wasteful.", e:"A profligate spray of boosts burned all fuel."},
+      {w:"abstemious", p:"ab-STEE-mee-us", pos:"adjective", d:"Not self-indulgent, especially with food or drink.", e:"An abstemious routine kept his focus razor sharp."},
+      {w:"abjure", p:"ab-JOOR", pos:"verb", d:"Solemnly renounce a belief, cause, or claim.", e:"She vowed to abjure procrastination."},
+      {w:"abrogate", p:"AB-ruh-gate", pos:"verb", d:"To repeal or do away with (a law, right, or agreement).", e:"They sought to abrogate the outdated rule."},
+      {w:"obstreperous", p:"ob-STREP-er-us", pos:"adjective", d:"Noisy and difficult to control.", e:"The obstreperous crowd roared as the storm rolled in."},
+      {w:"opprobrium", p:"uh-PROH-bree-um", pos:"noun", d:"Harsh criticism or censure; public disgrace.", e:"The failed update drew opprobrium from fans."},
+      {w:"panegyric", p:"pan-uh-JEER-ik", pos:"noun", d:"A public speech or text in praise of someone or something.", e:"Her tribute was a panegyric to the pioneers."},
+      {w:"peripatetic", p:"per-ih-puh-TET-ik", pos:"adjective", d:"Traveling from place to place, especially on foot.", e:"His peripatetic career chased swells across oceans."},
+      {w:"phlegmatic", p:"fleg-MAT-ik", pos:"adjective", d:"Calm and unemotional in temperament.", e:"He stayed phlegmatic even in overtime."},
+      {w:"quixotic", p:"kwik-SOT-ik", pos:"adjective", d:"Exceedingly idealistic; unrealistic and impractical.", e:"A quixotic plan to surf every break in a day."},
+      {w:"recalcitrant", p:"rih-KAL-sih-trunt", pos:"adjective", d:"Having an obstinately uncooperative attitude.", e:"A recalcitrant fin refused to seat properly."},
+      {w:"sagacious", p:"suh-GAY-shus", pos:"adjective", d:"Having or showing good judgment; wise.", e:"Her sagacious reads on the wind were unmatched."},
+      {w:"vituperate", p:"vye-TOO-puh-rayt", pos:"verb", d:"To blame or insult in strong or violent language.", e:"Never vituperate teammates—tilt loses games."},
+      {w:"pulchritude", p:"PUL-kri-tood", pos:"noun", d:"Physical beauty.", e:"The wave's pulchritude left us silent."},
+      {w:"ebullient", p:"ih-BULL-yunt", pos:"adjective", d:"Cheerful and full of energy.", e:"An ebullient crew loaded into the truck at dawn."},
+      {w:"enervate", p:"EN-ur-vayt (verb), EN-ur-vit (adj)", pos:"verb", d:"To weaken or drain energy.", e:"Back-to-back heats would enervate anyone."},
+      {w:"equivocate", p:"ih-KWIV-uh-kayt", pos:"verb", d:"To use ambiguous language to conceal the truth.", e:"Don't equivocate—call the rotate."},
+      {w:"exculpate", p:"EKS-kul-payt", pos:"verb", d:"To show or declare that someone is not guilty.", e:"The replay served to exculpate the ref."},
+      {w:"extemporaneous", p:"ek-STEM-puh-RAY-nee-us", pos:"adjective", d:"Spoken or done without preparation.", e:"His extemporaneous hype speech slapped."},
+      {w:"fastidious", p:"fa-STID-ee-us", pos:"adjective", d:"Very attentive to accuracy and detail.", e:"Her fastidious notes elevated the whole team."},
+      {w:"garrulous", p:"GAR-uh-lus", pos:"adjective", d:"Excessively talkative, especially on trivial matters.", e:"A garrulous commentator filled every silence."},
+      {w:"inchoate", p:"in-KOH-it", pos:"adjective", d:"Just begun and not fully formed; rudimentary.", e:"An inchoate strategy started to take shape."},
+      {w:"laconic", p:"luh-KON-ik", pos:"adjective", d:"Using very few words; concise.", e:"His laconic pings said everything."},
+      {w:"loquacious", p:"loh-KWAY-shus", pos:"adjective", d:"Tending to talk a great deal; talkative.", e:"The loquacious host never ran out of quips."},
+      {w:"malfeasance", p:"mal-FEE-zuns", pos:"noun", d:"Wrongdoing, especially by a public official.", e:"The scandal exposed blatant malfeasance."},
+      {w:"munificent", p:"myoo-NIF-uh-sent", pos:"adjective", d:"More generous than is usual or necessary.", e:"A munificent sponsor surprised the club."},
+      {w:"obsequious", p:"ob-SEE-kwee-us", pos:"adjective", d:"Obedient or attentive to an excessive degree.", e:"An obsequious assistant agreed to every whim."},
+      {w:"parsimonious", p:"par-sih-MOH-nee-us", pos:"adjective", d:"Unwilling to spend money or use resources; stingy.", e:"A parsimonious budget forced clever fixes."},
+      {w:"perfunctory", p:"per-FUNK-tuh-ree", pos:"adjective", d:"Carried out with minimal effort or reflection.", e:"A perfunctory warm-up led to sloppy play."},
+      {w:"phantasmagoric", p:"fan-taz-muh-GOR-ik", pos:"adjective", d:"Having a fantastic or deceptive appearance; dreamlike.", e:"Neon fog turned the city into a phantasmagoric arena."},
+      {w:"querulous", p:"KWER-uh-lus", pos:"adjective", d:"Complaining in a petulant or whining manner.", e:"A querulous thread clogged the chat."},
+      {w:"redolent", p:"RED-uh-lent", pos:"adjective", d:"Strongly reminiscent or suggestive; fragrant.", e:"Air redolent of salt and sunscreen means summer."},
+      {w:"salubrious", p:"suh-LOO-bree-us", pos:"adjective", d:"Health-giving; healthy.", e:"A salubrious routine of sleep and sun works wonders."},
+      {w:"soporific", p:"sop-uh-RIF-ik", pos:"adjective", d:"Tending to induce drowsiness or sleep.", e:"That lull in the action was downright soporific."},
+      {w:"spurious", p:"SPYUR-ee-us", pos:"adjective", d:"Not being what it purports to be; false or fake.", e:"Spurious leaks stirred the rumor mill."},
+      {w:"turgid", p:"TUR-jid", pos:"adjective", d:"Swollen and distended; (of language) pompous.", e:"His turgid speech needed heavy edits."},
+      {w:"perfidious", p:"per-FID-ee-us", pos:"adjective", d:"Deceitful and untrustworthy.", e:"A perfidious ally flipped late game."},
+      {w:"dilatory", p:"DIL-uh-tor-ee", pos:"adjective", d:"Slow to act; intended to delay.", e:"Dilatory tactics dragged the match past midnight."},
+      {w:"importunate", p:"im-POR-chuh-nit", pos:"adjective", d:"Persistent to the point of annoyance.", e:"An importunate vendor spammed whispers."},
+      {w:"imbroglio", p:"im-BROHL-yo", pos:"noun", d:"An extremely confused, complicated situation.", e:"The rulebook imbroglio lasted all season."},
+      {w:"jejune", p:"jih-JOON", pos:"adjective", d:"Naive, simplistic, and superficial; (of ideas) dry and uninteresting.", e:"A jejune proposal ignored real constraints."},
+      {w:"lachrymose", p:"LAK-rih-mohs", pos:"adjective", d:"Tearful or given to weeping.", e:"The lachrymose goodbye at the airport hit hard."}
+    ];
+
+    function yyyymmdd(date=new Date()){const z=n=>String(n).padStart(2,'0'); return `${date.getFullYear()}-${z(date.getMonth()+1)}-${z(date.getDate())}`}
+    function hashStr(s){ let h=0; for(let i=0;i<s.length;i++){ h=(s.charCodeAt(i))+(h<<6)+(h<<16)-h; h|=0;} return Math.abs(h) }
+    function dailyIndex(){ const now=new Date(); const pacificOffset=7*60; const pseudo=new Date(now.getTime()-pacificOffset*60*1000); const key=yyyymmdd(pseudo); return hashStr(key)%WORDS.length }
+    function rarityFromWord(word){const len=word.length; if(len>=12) return {name:'Legendary',bg:'linear-gradient(135deg,#ffe082,#ff9d00)'}; if(len>=10) return {name:'Epic',bg:'linear-gradient(135deg,#a86bff,#7b2cff)'}; if(len>=8) return {name:'Rare',bg:'linear-gradient(135deg,#64a7ff,#2a78ff)'}; if(len>=6) return {name:'Uncommon',bg:'linear-gradient(135deg,#7aff9b,#2ee65e)'}; return {name:'Common',bg:'linear-gradient(135deg,#d9d9d9,#b8b8b8)'} }
+
+    const elWord=document.getElementById('word');
+    const elPron=document.getElementById('pron');
+    const elPos=document.getElementById('pos');
+    const elDef=document.getElementById('def');
+    const elEx=document.getElementById('ex');
+    const elRarity=document.getElementById('rarity');
+    const elRarityText=document.getElementById('rarityText');
+    const subline=document.getElementById('subline');
+    const toggle=document.getElementById('simpleToggle');
+
+    function showEntry(entry){
+      elWord.textContent=entry.w; elPron.textContent=entry.p; elPos.textContent=entry.pos; elDef.textContent=entry.d; elEx.textContent=entry.e;
+      const r=rarityFromWord(entry.w); elRarity.style.setProperty('--rbg', r.bg); elRarityText.textContent=r.name;
+      subline.innerHTML=`Tip: Press <strong>R</strong> to shuffle, <strong>T</strong> for today, <strong>P</strong> to pronounce, <strong>S</strong> for Simple Mode. <span style="opacity:.75">(${r.name})</span>`
+    }
+    const getRandomIndex=()=>Math.floor(Math.random()*WORDS.length);
+
+    const btnShuffle=document.getElementById('btnShuffle');
+    const btnToday=document.getElementById('btnToday');
+    const btnSpeak=document.getElementById('btnSpeak');
+    const btnCopy=document.getElementById('btnCopy');
+
+    btnShuffle.addEventListener('click',()=>showEntry(WORDS[getRandomIndex()]));
+    btnToday.addEventListener('click',()=>showEntry(WORDS[dailyIndex()]));
+    btnSpeak.addEventListener('click',()=>{ const w=elWord.textContent; if('speechSynthesis' in window){ const u=new SpeechSynthesisUtterance(w); u.rate=.9; u.pitch=1; const vs=speechSynthesis.getVoices(); const v=vs.find(v=>/en-/i.test(v.lang))||vs[0]; if(v) u.voice=v; speechSynthesis.cancel(); speechSynthesis.speak(u);} else alert('Speech not supported in this browser.')});
+    btnCopy.addEventListener('click', async()=>{ const payload=`"${elWord.textContent}" (${elPos.textContent}) — ${elDef.textContent}\nEx: ${elEx.textContent}`; try{ await navigator.clipboard.writeText(payload); btnCopy.textContent='Copied!'; setTimeout(()=>btnCopy.textContent='Copy',1200);}catch(e){ alert('Could not copy.') } });
+
+    document.addEventListener('keydown',e=>{ const k=e.key.toLowerCase(); if(k==='r') btnShuffle.click(); if(k==='t') btnToday.click(); if(k==='p') btnSpeak.click(); if(k==='s'){ toggle.checked=!toggle.checked; toggle.dispatchEvent(new Event('change')) }});
+    toggle.addEventListener('change',()=>document.body.classList.toggle('simple', toggle.checked));
+
+    showEntry(WORDS[dailyIndex()]);
+  </script>
+</body>
+</html>
